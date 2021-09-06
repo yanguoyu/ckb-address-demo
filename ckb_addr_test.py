@@ -12,6 +12,7 @@ def ckbhash():
     return hashlib.blake2b(digest_size=32, person=b'ckb-default-hash')
 
 # ref: https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0021-ckb-address-format/0021-ckb-address-format.md
+FORMAT_TYPE_FULL      = 0x00
 FORMAT_TYPE_SHORT     = 0x01
 FORMAT_TYPE_FULL_DATA = 0x02
 FORMAT_TYPE_FULL_TYPE = 0x04
@@ -19,6 +20,9 @@ FORMAT_TYPE_FULL_TYPE = 0x04
 CODE_INDEX_SECP256K1_SINGLE = 0x00
 CODE_INDEX_SECP256K1_MULTI  = 0x01
 CODE_INDEX_ACP              = 0x02
+
+BECH32_CONST = 1
+BECH32M_CONST = 0x2bc830a3
 
 # ref: https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0024-ckb-system-script-list/0024-ckb-system-script-list.md
 SCRIPT_CONST_MAINNET = {
@@ -77,13 +81,27 @@ def generateShortAddress(code_index, args, network = "mainnet"):
     payload = bytes([format_type, code_index]) + bytes.fromhex(args)
     data_part = sa.convertbits(payload, 8, 5)
     values = hrpexp + data_part
-    polymod = sa.bech32_polymod(values + [0, 0, 0, 0, 0, 0]) ^ 1
+    polymod = sa.bech32_polymod(values + [0, 0, 0, 0, 0, 0]) ^ BECH32_CONST
     checksum = [(polymod >> 5 * (5 - i)) & 31 for i in range(6)]
     combined = data_part + checksum
     addr = hrp + '1' + ''.join([sa.CHARSET[d] for d in combined])
     return addr
 
 def generateFullAddress(hash_type, code_hash, args, network = "mainnet"):
+    hrp = {"mainnet": "ckb", "testnet": "ckt"}[network]
+    hrpexp =  sa.bech32_hrp_expand(hrp)
+    format_type  = FORMAT_TYPE_FULL
+    payload = bytes([format_type, hash_type]) + bytes.fromhex(code_hash)
+    payload += bytes.fromhex(args)
+    data_part = sa.convertbits(payload, 8, 5)
+    values = hrpexp + data_part
+    polymod = sa.bech32_polymod(values + [0, 0, 0, 0, 0, 0]) ^ BECH32M_CONST
+    checksum = [(polymod >> 5 * (5 - i)) & 31 for i in range(6)]
+    combined = data_part + checksum
+    addr = hrp + '1' + ''.join([sa.CHARSET[d] for d in combined])
+    return addr
+
+def generateDeprecatedFullAddress(hash_type, code_hash, args, network = "mainnet"):
     format_type = {"Data" : bytes([FORMAT_TYPE_FULL_DATA]),
                  "Type" : bytes([FORMAT_TYPE_FULL_TYPE])}[hash_type]
     hrp = {"mainnet": "ckb", "testnet": "ckt"}[network]
@@ -92,7 +110,7 @@ def generateFullAddress(hash_type, code_hash, args, network = "mainnet"):
     payload += bytes.fromhex(args)
     data_part = sa.convertbits(payload, 8, 5)
     values = hrpexp + data_part
-    polymod = sa.bech32_polymod(values + [0, 0, 0, 0, 0, 0]) ^ 1
+    polymod = sa.bech32_polymod(values + [0, 0, 0, 0, 0, 0]) ^ BECH32_CONST
     checksum = [(polymod >> 5 * (5 - i)) & 31 for i in range(6)]
     combined = data_part + checksum
     addr = hrp + '1' + ''.join([sa.CHARSET[d] for d in combined])
@@ -100,7 +118,7 @@ def generateFullAddress(hash_type, code_hash, args, network = "mainnet"):
 
 def decodeAddress(addr, network = "mainnet"):
     hrp = {"mainnet": "ckb", "testnet": "ckt"}[network]
-    hrpgot, data = sa.bech32_decode(addr)
+    hrpgot, data, spec = sa.bech32_decode(addr)
     if hrpgot != hrp or data == None:
         return False
     decoded = sa.convertbits(data, 5, 8, False)
@@ -108,7 +126,15 @@ def decodeAddress(addr, network = "mainnet"):
         return False
     payload = bytes(decoded)
     format_type = payload[0]
-    if format_type == FORMAT_TYPE_SHORT:
+    if format_type == FORMAT_TYPE_FULL:
+        ptr = 1
+        hash_type = payload[ptr : ptr+1].hex()
+        ptr += 1
+        code_hash = payload[ptr : ptr+32].hex()
+        ptr += 32
+        args = payload[ptr :].hex()
+        return ("full", hash_type, code_hash, args)
+    elif format_type == FORMAT_TYPE_SHORT:
         code_index = payload[1]
         pk = payload[2:].hex()
         return ("short", code_index, pk)
@@ -118,7 +144,7 @@ def decodeAddress(addr, network = "mainnet"):
         code_hash = payload[ptr : ptr+32].hex()
         ptr += 32
         args = payload[ptr :].hex()
-        return ("full", full_type, code_hash, args)
+        return ("deprecated full", full_type, code_hash, args)
 
 def expandShortAddress(address):
     network = address[:3]
@@ -197,14 +223,31 @@ if __name__ == "__main__":
     print(">> expand to script")
     print(expandShortAddress(addr_short))
     
+
     # test full address functions
     print("\n== full address test ==")
+    hash_type = 0x01
     code_hash = SECP256K1_CODE_HASH
     args = PKBLAKE160
     print("code_hash to encode:\t", code_hash)
     print("with args to encode:\t", args)
-    addr_full = generateFullAddress("Type", code_hash, args, network)
+    addr_full = generateFullAddress(hash_type, code_hash, args, network)
     print("full address generated:\t", addr_full)
+    decoded = decodeAddress(addr_full, network)
+    print(">> decode address:")
+    print(" - format type:\t\t", decoded[0])
+    print(" - hash type:\t\t", decoded[1])
+    print(" - code hash:\t\t", decoded[2])
+    print(" - args:\t\t", decoded[3])
+
+    # test deprecated full address functions
+    print("\n== deprecated full address test ==")
+    code_hash = SECP256K1_CODE_HASH
+    args = PKBLAKE160
+    print("code_hash to encode:\t", code_hash)
+    print("with args to encode:\t", args)
+    addr_full = generateDeprecatedFullAddress("Type", code_hash, args, network)
+    print("deprecated full address generated:\t", addr_full)
     decoded = decodeAddress(addr_full, network)
     print(">> decode address:")
     print(" - format type:\t\t", decoded[0])
