@@ -87,12 +87,12 @@ def generateShortAddress(code_index, args, network = "mainnet"):
     addr = hrp + '1' + ''.join([sa.CHARSET[d] for d in combined])
     return addr
 
-def generateFullAddress(hash_type, code_hash, args, network = "mainnet"):
+def generateFullAddress(code_hash, hash_type, args, network = "mainnet"):
     hrp = {"mainnet": "ckb", "testnet": "ckt"}[network]
     hrpexp =  sa.bech32_hrp_expand(hrp)
     format_type  = FORMAT_TYPE_FULL
-    payload = bytes([format_type, hash_type]) + bytes.fromhex(code_hash)
-    payload += bytes.fromhex(args)
+    payload = bytes([format_type]) + bytes.fromhex(code_hash)
+    payload += bytes([hash_type]) + bytes.fromhex(args)
     data_part = sa.convertbits(payload, 8, 5)
     values = hrpexp + data_part
     polymod = sa.bech32_polymod(values + [0, 0, 0, 0, 0, 0]) ^ BECH32M_CONST
@@ -128,12 +128,12 @@ def decodeAddress(addr, network = "mainnet"):
     format_type = payload[0]
     if format_type == FORMAT_TYPE_FULL:
         ptr = 1
-        hash_type = payload[ptr : ptr+1].hex()
-        ptr += 1
         code_hash = payload[ptr : ptr+32].hex()
         ptr += 32
+        hash_type = payload[ptr : ptr+1].hex()
+        ptr += 1
         args = payload[ptr :].hex()
-        return ("full", hash_type, code_hash, args)
+        return ("full", code_hash, hash_type, args)
     elif format_type == FORMAT_TYPE_SHORT:
         code_index = payload[1]
         pk = payload[2:].hex()
@@ -226,18 +226,18 @@ if __name__ == "__main__":
 
     # test full address functions
     print("\n== full address test ==")
-    hash_type = 0x01
     code_hash = SECP256K1_CODE_HASH
+    hash_type = 0x01
     args = PKBLAKE160
     print("code_hash to encode:\t", code_hash)
     print("with args to encode:\t", args)
-    addr_full = generateFullAddress(hash_type, code_hash, args, network)
+    addr_full = generateFullAddress(code_hash, hash_type, args, network)
     print("full address generated:\t", addr_full)
     decoded = decodeAddress(addr_full, network)
     print(">> decode address:")
     print(" - format type:\t\t", decoded[0])
-    print(" - hash type:\t\t", decoded[1])
-    print(" - code hash:\t\t", decoded[2])
+    print(" - code hash:\t\t", decoded[1])
+    print(" - hash type:\t\t", decoded[2])
     print(" - args:\t\t", decoded[3])
 
     # test deprecated full address functions
