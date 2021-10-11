@@ -22,7 +22,7 @@ address generate:        ckb1qyq5lv479ewscx3ms620sv34pgeuz6zagaaqklhtgg
  - code_hash_index:      1
  - args:                 4fb2be2e5d0c1a3b8694f832350a33c1685d477a
 
-== full address test ==
+== full address test (code_hash_index = 0x01) ==
 code_hash to encode:     9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8
 with args to encode:     b39bbc0b3673c7d36450bc14cfcdad2d559c6c64
 full address generate:   ckb1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50xwsqdnnw7qkdnnclfkg59uzn8umtfd2kwxceqxwquc4
@@ -30,6 +30,16 @@ full address generate:   ckb1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50x
  - format type:          full
  - code hash:            9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8
  - hash type:            01
+ - args:                 b39bbc0b3673c7d36450bc14cfcdad2d559c6c64
+
+ == full address test (code_hash_index = 0x02) ==
+code_hash to encode:     9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8
+with args to encode:     b39bbc0b3673c7d36450bc14cfcdad2d559c6c64
+full address generate:   ckb1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50xwsq4nnw7qkdnnclfkg59uzn8umtfd2kwxceqcydzyt
+>> decode address:
+ - format type:          full
+ - code hash:            9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8
+ - hash type:            02
  - args:                 b39bbc0b3673c7d36450bc14cfcdad2d559c6c64
 
  == deprecated full address test ==

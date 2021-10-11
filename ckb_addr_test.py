@@ -224,10 +224,26 @@ if __name__ == "__main__":
     print(expandShortAddress(addr_short))
     
 
-    # test full address functions
-    print("\n== full address test ==")
+    # test full address (type_hash = 0x01) functions
+    print("\n== full address (type_hash = 0x01) test ==")
     code_hash = SECP256K1_CODE_HASH
     hash_type = 0x01
+    args = PKBLAKE160
+    print("code_hash to encode:\t", code_hash)
+    print("with args to encode:\t", args)
+    addr_full = generateFullAddress(code_hash, hash_type, args, network)
+    print("full address generated:\t", addr_full)
+    decoded = decodeAddress(addr_full, network)
+    print(">> decode address:")
+    print(" - format type:\t\t", decoded[0])
+    print(" - code hash:\t\t", decoded[1])
+    print(" - hash type:\t\t", decoded[2])
+    print(" - args:\t\t", decoded[3])
+
+    # test full address (type_hash = 0x02) functions
+    print("\n== full address (type_hash = 0x02) test ==")
+    code_hash = SECP256K1_CODE_HASH
+    hash_type = 0x02
     args = PKBLAKE160
     print("code_hash to encode:\t", code_hash)
     print("with args to encode:\t", args)
@@ -245,7 +261,7 @@ if __name__ == "__main__":
     code_hash = SECP256K1_CODE_HASH
     args = PKBLAKE160
     print("code_hash to encode:\t", code_hash)
-    print("with args to encode:\t", args)
+    print("with args to encode:\t", args)   
     addr_full = generateDeprecatedFullAddress("Type", code_hash, args, network)
     print("deprecated full address generated:\t", addr_full)
     decoded = decodeAddress(addr_full, network)
