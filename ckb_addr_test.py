@@ -163,7 +163,8 @@ def expandShortAddress(address):
 
 if __name__ == "__main__":
     # setup network
-    network = "mainnet"
+    mainnet = "mainnet"
+    testnet = "testnet"
 
     # test constant parameters
     SECP256K1_CODE_HASH = "9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8"
@@ -177,15 +178,17 @@ if __name__ == "__main__":
     print("== default short address (code_hash_index = 0x00) test ==")
     args = PKBLAKE160
     print("args to encode:\t\t", args)
-    addr_short = generateShortAddress(CODE_INDEX_SECP256K1_SINGLE, args, network)
-    print("address generated:\t", addr_short)
-    decoded = decodeAddress(addr_short, network)
+    mainnet_addr_short = generateShortAddress(CODE_INDEX_SECP256K1_SINGLE, args, mainnet)
+    testnet_addr_short = generateShortAddress(CODE_INDEX_SECP256K1_SINGLE, args, testnet)
+    print("mainnet address:\t", mainnet_addr_short)
+    print("testnet address:\t", testnet_addr_short)
+    decoded = decodeAddress(mainnet_addr_short, mainnet)
     print(">> decode address:")
     print(" - format type:\t\t", decoded[0])
     print(" - code_hash_index:\t", decoded[1])
     print(" - args:\t\t", decoded[2])
     print(">> expand to script")
-    print(expandShortAddress(addr_short))
+    print(expandShortAddress(mainnet_addr_short))
 
     # test short address (code_hash_index = 0x01) functions
     print("\n== multisign short address (code_hash_index = 0x01) test ==")
@@ -199,29 +202,33 @@ if __name__ == "__main__":
     args = multi_sign_script_hash[:40]
     print("multi sign script:\t", multi_sign_script.hex())
     print("args to encode:\t\t", args)
-    addr_short = generateShortAddress(CODE_INDEX_SECP256K1_MULTI, args, network)
-    print("address generated:\t", addr_short)
-    decoded = decodeAddress(addr_short, network)
+    mainnet_addr_short = generateShortAddress(CODE_INDEX_SECP256K1_MULTI, args, mainnet)
+    testnet_addr_short = generateShortAddress(CODE_INDEX_SECP256K1_MULTI, args, testnet)
+    print("mainnet address:\t", mainnet_addr_short)
+    print("testnet address:\t", testnet_addr_short)
+    decoded = decodeAddress(mainnet_addr_short, mainnet)
     print(">> decode address:")
     print(" - format type:\t\t", decoded[0])
     print(" - code_hash_index:\t", decoded[1])
     print(" - args:\t\t", decoded[2])
     print(">> expand to script")
-    print(expandShortAddress(addr_short))
+    print(expandShortAddress(mainnet_addr_short))
 
     # test short address (code_hash_index = 0x02) functions
     print("\n== acp short address (code_hash_index = 0x02) test ==")
     args = PKBLAKE_Cipher
     print("args to encode:\t\t", args)
-    addr_short = generateShortAddress(CODE_INDEX_ACP, args, network)
-    print("address generated:\t", addr_short)
-    decoded = decodeAddress(addr_short, network)
+    mainnet_addr_short = generateShortAddress(CODE_INDEX_ACP, args, mainnet)
+    testnet_addr_short = generateShortAddress(CODE_INDEX_SECP256K1_MULTI, args, testnet)
+    print("mainnet address:\t", mainnet_addr_short)
+    print("testnet address:\t", testnet_addr_short)
+    decoded = decodeAddress(mainnet_addr_short, mainnet)
     print(">> decode address:")
     print(" - format type:\t\t", decoded[0])
     print(" - code_hash_index:\t", decoded[1])
     print(" - args:\t\t", decoded[2])
     print(">> expand to script")
-    print(expandShortAddress(addr_short))
+    print(expandShortAddress(mainnet_addr_short))
 
     # test full address (hash_type = 0x00) functions
     print("\n== full address (hash_type = 0x00) test ==")
@@ -230,9 +237,11 @@ if __name__ == "__main__":
     args = PKBLAKE160
     print("code_hash to encode:\t", code_hash)
     print("with args to encode:\t", args)
-    addr_full = generateFullAddress(code_hash, hash_type, args, network)
-    print("full address generated:\t", addr_full)
-    decoded = decodeAddress(addr_full, network)
+    mainnet_addr_full = generateFullAddress(code_hash, hash_type, args, mainnet)
+    testnet_addr_full = generateFullAddress(code_hash, hash_type, args, testnet)
+    print("mainnet address:\t", mainnet_addr_full)
+    print("testnet address:\t", testnet_addr_full)
+    decoded = decodeAddress(mainnet_addr_full, mainnet)
     print(">> decode address:")
     print(" - format type:\t\t", decoded[0])
     print(" - code hash:\t\t", decoded[1])
@@ -246,9 +255,11 @@ if __name__ == "__main__":
     args = PKBLAKE160
     print("code_hash to encode:\t", code_hash)
     print("with args to encode:\t", args)
-    addr_full = generateFullAddress(code_hash, hash_type, args, network)
-    print("full address generated:\t", addr_full)
-    decoded = decodeAddress(addr_full, network)
+    mainnet_addr_full = generateFullAddress(code_hash, hash_type, args, mainnet)
+    testnet_addr_full = generateFullAddress(code_hash, hash_type, args, testnet)
+    print("mainnet address:\t", mainnet_addr_full)
+    print("testnet address:\t", testnet_addr_full)
+    decoded = decodeAddress(mainnet_addr_full, mainnet)
     print(">> decode address:")
     print(" - format type:\t\t", decoded[0])
     print(" - code hash:\t\t", decoded[1])
@@ -262,9 +273,11 @@ if __name__ == "__main__":
     args = PKBLAKE160
     print("code_hash to encode:\t", code_hash)
     print("with args to encode:\t", args)
-    addr_full = generateFullAddress(code_hash, hash_type, args, network)
-    print("full address generated:\t", addr_full)
-    decoded = decodeAddress(addr_full, network)
+    mainnet_addr_full = generateFullAddress(code_hash, hash_type, args, mainnet)
+    testnet_addr_full = generateFullAddress(code_hash, hash_type, args, testnet)
+    print("mainnet address:\t", mainnet_addr_full)
+    print("testnet address:\t", testnet_addr_full)
+    decoded = decodeAddress(mainnet_addr_full, mainnet)
     print(">> decode address:")
     print(" - format type:\t\t", decoded[0])
     print(" - code hash:\t\t", decoded[1])
@@ -277,9 +290,11 @@ if __name__ == "__main__":
     args = PKBLAKE160
     print("code_hash to encode:\t", code_hash)
     print("with args to encode:\t", args)
-    addr_full = generateDeprecatedFullAddress("Data", code_hash, args, network)
-    print("deprecated full address generated:\t", addr_full)
-    decoded = decodeAddress(addr_full, network)
+    mainnet_addr_full = generateDeprecatedFullAddress("Data", code_hash, args, mainnet)
+    testnet_addr_full = generateDeprecatedFullAddress("Data", code_hash, args, testnet)
+    print("mainnet address:\t", mainnet_addr_full)
+    print("testnet address:\t", testnet_addr_full)
+    decoded = decodeAddress(mainnet_addr_full, mainnet)
     print(">> decode address:")
     print(" - format type:\t\t", decoded[0])
     print(" - code type:\t\t", decoded[1])
@@ -292,9 +307,11 @@ if __name__ == "__main__":
     args = PKBLAKE160
     print("code_hash to encode:\t", code_hash)
     print("with args to encode:\t", args)   
-    addr_full = generateDeprecatedFullAddress("Type", code_hash, args, network)
-    print("deprecated full address generated:\t", addr_full)
-    decoded = decodeAddress(addr_full, network)
+    mainnet_addr_full = generateDeprecatedFullAddress("Type", code_hash, args, mainnet)
+    testnet_addr_full = generateDeprecatedFullAddress("Type", code_hash, args, testnet)
+    print("mainnet address:\t", mainnet_addr_full)
+    print("testnet address:\t", testnet_addr_full)
+    decoded = decodeAddress(mainnet_addr_full, mainnet)
     print(">> decode address:")
     print(" - format type:\t\t", decoded[0])
     print(" - code type:\t\t", decoded[1])
