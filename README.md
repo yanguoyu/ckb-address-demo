@@ -25,9 +25,9 @@ testnet address:	 ckt1qyq5lv479ewscx3ms620sv34pgeuz6zagaaqt6f5y5
   - args:		 4fb2be2e5d0c1a3b8694f832350a33c1685d477a
 
 == acp short address (code_hash_index = 0x02) test ==
-args to encode:          4fb2be2e5d0c1a3b8694f832350a33c1685d477a
+args to encode:          bd07d9f32bce34d27152a6a0391d324f79aab854
 mainnet address:	 ckb1qypt6p7e7v4uudxjw9f2dgper5ey77d2hp2qxz4u4u
-testnet address:	 ckt1qyqm6p7e7v4uudxjw9f2dgper5ey77d2hp2qpmqqdk
+testnet address:	 ckt1qypt6p7e7v4uudxjw9f2dgper5ey77d2hp2qm8treq
 >> decode address:
  - format type:          short
  - code_hash_index:      2
