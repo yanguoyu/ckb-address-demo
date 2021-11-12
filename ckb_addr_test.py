@@ -219,7 +219,7 @@ if __name__ == "__main__":
     args = PKBLAKE_Cipher
     print("args to encode:\t\t", args)
     mainnet_addr_short = generateShortAddress(CODE_INDEX_ACP, args, mainnet)
-    testnet_addr_short = generateShortAddress(CODE_INDEX_SECP256K1_MULTI, args, testnet)
+    testnet_addr_short = generateShortAddress(CODE_INDEX_ACP, args, testnet)
     print("mainnet address:\t", mainnet_addr_short)
     print("testnet address:\t", testnet_addr_short)
     decoded = decodeAddress(mainnet_addr_short, mainnet)
